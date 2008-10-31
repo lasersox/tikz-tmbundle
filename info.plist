@@ -4,6 +4,11 @@
 <dict>
 	<key>name</key>
 	<string>TikZ</string>
+	<key>ordering</key>
+	<array>
+		<string>3F55FDC0-E5A1-4406-A8FB-73CA60D7C80D</string>
+		<string>836A8C31-EECA-46EF-8E3D-93AE2F01B965</string>
+	</array>
 	<key>uuid</key>
 	<string>ED10FDB4-5A93-4DBD-8830-179C26781676</string>
 </dict>

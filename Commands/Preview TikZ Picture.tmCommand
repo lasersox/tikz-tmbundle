@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+
+require ENV["TM_SUPPORT_PATH"] + "/lib/tm/executor"
+require ENV["TM_SUPPORT_PATH"] + "/lib/tm/tempfile"
+
+require ENV["TM_SUPPORT_PATH"] + "/lib/escape"
+require ENV["TM_SUPPORT_PATH"] + "/lib/exit_codes"
+
+require ENV["TM_BUNDLE_SUPPORT"] + "/LaTeXtra Support/lib/texstack"
+
+def link_to_error(file, num, message)
+  return "&lt;p&gt;&lt;a href=\"txmt://open?url=file://#{e_url(file)}&amp;line=#{num}\"&gt;#{File.basename file}#{num.nil? ? "" : ":"+num.to_s}:&lt;/a&gt; #{message}&lt;/p&gt;"
+end
+
+temp = TextMate::IO.tempfile("tex")
+temp.write($stdin.read)
+temp.flush
+
+ENV["TM_DISPLAYNAME"] = "TikZ Picture"
+
+pdf = ENV["TMPDIR"] + "/tm-tikz-preview.#{ENV["TM_PID"] || ENV["LOGNAME"]}.pdf"
+
+printing_an_error = false
+TextMate::Executor.run(ENV["TM_LATEX"] || "pdflatex", temp.path, :verb =&gt; "Rendering") do |line, type|
+
+  nil
+
+  printing_an_error = true if line =~ /^!(?!\s*==&gt;)/
+  update_current_file(line) unless printing_an_error
+
+  file = current_file() || ENV["TM_FILEPATH"]
+  file = "untitled" if file.nil?
+  if not file.nil? and file[0].chr == "."
+   file = ENV["TM_DIRECTORY"] + file[1..-1]
+  end
+
+  line = line.strip
+  if line =~ /^!(?!\s*==&gt;)/
+    link_to_error(file,line.slice(/lines? (\d+)/,1),line)
+  elsif line =~ /^LaTeX Warning: (.*)/ or line =~ /^((?:Und|Ov)erfull.*)/
+    message = $1
+    link_to_error(file,line.slice(/lines? (\d+)/,1),message)
+  elsif line =~ /^l\.(\d+)(.*)/
+   printing_an_error=false
+   link_to_error(file,$1,$2)
+  elsif line =~ /^--&gt;(.*)$/
+   "&lt;h4&gt;#{$1}…&lt;/h4&gt;" 
+  elsif line =~ /^-+$/
+   "&lt;hr/&gt;\n"
+  elsif printing_an_error
+   nil # returning nil lets Executor print the line
+  else
+   ''  # returning an empty string "" causes Executor to do nothing.
+  end
+end
+
+if $?.nil? or $?.exitstatus == 0
+  if File.exists?(pdf)
+    %x{/usr/texbin/pdfcrop --margins 12 "#{pdf}" "#{pdf}"}
+    Process.detach fork {
+      `/usr/bin/osascript -e '
+        tell application "Skim"
+          set pdf to "#{pdf}"
+          if (count of (documents whose path is pdf)) = 0 then
+            open pdf
+          else
+            revert (documents whose path is pdf)
+          end if
+          activate
+        end tell'`
+    }
+    sleep(1)
+    TextMate::exit_discard
+  end
+else
+  TextMate::exit_show_html
+end
+</string>
+	<key>fallbackInput</key>
+	<string>scope</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>@r</string>
+	<key>name</key>
+	<string>Preview TikZ Picture</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>meta.function.environment.tikz.latex</string>
+	<key>uuid</key>
+	<string>836A8C31-EECA-46EF-8E3D-93AE2F01B965</string>
+</dict>
+</plist>
