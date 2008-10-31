@@ -120,7 +120,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>[a-zA-Z0-9 ]*</string>
+					<string>[A-Za-z][a-zA-Z0-9 ]*</string>
 					<key>name</key>
 					<string>entity.name.node.latex.tikz</string>
 				</dict>
