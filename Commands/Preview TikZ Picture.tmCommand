@@ -94,7 +94,7 @@ end
 	<key>output</key>
 	<string>showAsHTML</string>
 	<key>scope</key>
-	<string>meta.function.environment.tikz.latex</string>
+	<string>meta.function.environment.latex.tikz</string>
 	<key>uuid</key>
 	<string>836A8C31-EECA-46EF-8E3D-93AE2F01B965</string>
 </dict>
