@@ -91,6 +91,53 @@
 			</dict>
 			<key>name</key>
 			<string>meta.function.arguments.optional.latex.tikz</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>([a-z\/][a-z\/. ]*)(=)</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>entity.other.attribute-name.latex.tikz</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>(,)?|(?=\])</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation</string>
+						</dict>
+					</dict>
+				</dict>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>entity.other.attribute-name.latex.tikz</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>([a-z\/][a-z\/. ]*)(?:(,)|(?=]))</string>
+				</dict>
+			</array>
 		</dict>
 		<key>points</key>
 		<dict>

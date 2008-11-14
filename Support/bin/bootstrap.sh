@@ -8,11 +8,12 @@ pdf="${TMPDIR}/tm-tikz-preview.${TM_PID:-$LOGNAME}.pdf";
 pre="${TMPDIR}/tm-tikz-preview-preamble.tex";
 fmt="${TMPDIR}/tm-tikz-preview-preamble.fmt";
 
-if [[ ! -e "$pre" || ! "$(head -n 1 "$pre")" = "    % abd46142bfef7a5f76bc684af041ac48" ]]; then
+if [[ ! -e "$pre" || ! "$(head -n 1 "$pre")" = "    % b1b0c8241f0dd27bc17aa983cb135179" ]]; then
   cat > "${pre}" <<-'PREAMBLE'
-    % abd46142bfef7a5f76bc684af041ac48
+    % b1b0c8241f0dd27bc17aa983cb135179
     \documentclass{article}
     \pagestyle{empty}
+    \usepackage{xifthen}
     \usepackage{pgfmath}
     \usepackage{tikz}
     \usetikzlibrary{%
